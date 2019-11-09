@@ -86,16 +86,16 @@ namespace WorkdayCalendar
              * - Konverterer TotalMinutes til decimal da det er en tryggere konversion
              * - Runder til int da presisjonen til programmet begrenses til minutter
              */
-            int totalWorkdayMinutes = (int)Math.Round(Convert.ToDecimal(GetWorkdayDuration().TotalMinutes) * incrementInWorkdays);
-            int elapsedWorkdayMinutes = 0;
+            int totalWorkdaySeconds = (int)Math.Round(Convert.ToDecimal(GetWorkdayDuration().TotalSeconds) * incrementInWorkdays);
+            int elapsedWorkdaySeconds = 0;
 
             // Simuler tiden bakover/fremover til vi har passert nok arbeidsminutter
-            int scanMinuteIncremention = incrementInWorkdays < 0 ? -1 : 1;
+            int scanIncremention = incrementInWorkdays < 0 ? -1 : 1;
             DateTime scanDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, startDate.Hour, startDate.Minute, 0);
 
-            while (elapsedWorkdayMinutes != totalWorkdayMinutes)
+            while (elapsedWorkdaySeconds != totalWorkdaySeconds)
             {
-                scanDate = scanDate.AddMinutes(scanMinuteIncremention);
+                scanDate = scanDate.AddSeconds(scanIncremention);
 
                 if (WeekendDays.Contains(scanDate.DayOfWeek))
                     continue;
@@ -108,10 +108,10 @@ namespace WorkdayCalendar
                  * Siden vi for vær while loop egentlig vurderer en 1-minutts-periode, så må vi sjekk
                  * både minuttet vi er på, og minuttet vi kommer fra. På den måten vurderer man at hele minuttet er innenfor.
                  */ 
-                if (!IsWithinWorkday(scanDate) || !IsWithinWorkday(scanDate.AddMinutes(-scanMinuteIncremention)))
+                if (!IsWithinWorkday(scanDate) || !IsWithinWorkday(scanDate.AddSeconds(-scanIncremention)))
                     continue;
 
-                elapsedWorkdayMinutes += scanMinuteIncremention;
+                elapsedWorkdaySeconds += scanIncremention;
             }
 
             return scanDate;
