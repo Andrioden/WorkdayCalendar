@@ -1,6 +1,23 @@
-﻿/*
- * Du vil se at det er summary kommentarer på engelsk, dette er kommentarer til den teoretiske utvikleren som bruker denne klassen.
+﻿
+/*
+ * Jeg gikk for en teknikk der jeg scanner/looper/simulerer meg til riktig dato. Med en presisjon på
+ * sekundnivå så betyr det at man må iterere et sekund av gangen, dette gir ikke særlig god performance.
  * 
+ * Det er enten en feil i min implementasjon eller i fasiten, fordi jeg får feil på -6.7470217 input som kan
+ * ses i konsoll-output. Jeg klarer ikke å finne feilen uten å dypdykke utover de timene jeg tenkte var en
+ * fornuftig mengde å bruke på dette. I tillegg vet jeg ikke om det er feil, så det var litt lite motiverende å prøve å løse. : P
+ * 
+ * Hadde jeg skulle prøvd å løse dette på en annen måte ville jeg bygget dette med fokus på dato-ranges som
+ * hadde blitt generert bakover/forover i tid for utilgjengelige eller tilgjengelige tider, en range generert av gangen. Ala:
+ * 
+ * while (not found workday)
+ *      range = GenerateNonWorkdayRange(fromDate)
+ *      if (lapsedTimeNeeded within date)
+ *          return answer
+ *      fromDate = range.end
+ *      continue
+ *
+ * Du vil se at det er summary kommentarer på engelsk, dette er kommentarer til den hypotetiske utvikleren som skal bruke denne klassen.
  * De norske kommentarene i metodene er mine kommentarer ifb Vivende code review.
  */
 using System;
@@ -9,6 +26,7 @@ using System.Linq;
 
 namespace WorkdayCalendar
 {
+
     public class WorkdayCalendar : IWorkdayCalendar
     {
         private List<DateTime> Holidays = new List<DateTime>();
@@ -61,6 +79,16 @@ namespace WorkdayCalendar
 
         public bool IsWithinWorkday(DateTime d)
         {
+            /*
+             * Dette kunne man gjort på flere måter:
+             * Alt 1 - Bruk start og stop tiden basert på DateTime equal checks som gjort under med IsBetweenStartAndStop metoden
+             * Alt 2 - Sjekket StartHours/StartMinutes/StopHours/StopMinutes direkte mot input datoens tider
+             * Alt 3 - Bruk GetWorkdayDuration() ift starttiden
+             * 
+             * Jeg valgte Alt 1 da jeg tror den ga mest lesbar kode. Men jeg må nevne at denne metoden er den jeg minst fornøyd med,
+             * men jeg tror ingen av alternativene hadde blitt særlig enklere å lese, da kryssover-nattes-edge-casen gjør det komplisert
+             * å få en god totaloversikt over alt som må sjekkes i metoden.
+             */
             if (IsWorkdayStartAndStopOnSameDay())
                 return IsBetweenStartAndStop(d);
             else // Arbeidstid krysser natten
@@ -78,18 +106,18 @@ namespace WorkdayCalendar
         }
 
         /// <summary>
-        /// Get the next workday after the startDate incremeted by given amount of workdays have lapsed. Precision to minutes.
+        /// Get the next workday after the startDate incremeted by given amount of workdays have lapsed. Precision to seconds.
         /// </summary>
         public DateTime GetWorkdayAfterIncremetedWorkdays(DateTime startDate, decimal incrementInWorkdays)
         {
             /*
-             * - Konverterer TotalMinutes til decimal da det er en tryggere konversion
-             * - Runder til int da presisjonen til programmet begrenses til minutter
+             * - Konverterer til decimal da det er en tryggere konversion
+             * - Runder til int da presisjonen til programmet begrenses til sekunder
              */
             int totalWorkdaySeconds = (int)Math.Round(Convert.ToDecimal(GetWorkdayDuration().TotalSeconds) * incrementInWorkdays);
             int elapsedWorkdaySeconds = 0;
 
-            // Simuler tiden bakover/fremover til vi har passert nok arbeidsminutter
+            // Simuler tiden bakover/fremover til vi har passert nok arbeidstid
             int scanIncremention = incrementInWorkdays < 0 ? -1 : 1;
             DateTime scanDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, startDate.Hour, startDate.Minute, 0);
 
@@ -105,9 +133,9 @@ namespace WorkdayCalendar
                     continue;
 
                 /*
-                 * Siden vi for vær while loop egentlig vurderer en 1-minutts-periode, så må vi sjekk
-                 * både minuttet vi er på, og minuttet vi kommer fra. På den måten vurderer man at hele minuttet er innenfor.
-                 */ 
+                 * Siden vi for vær while loop egentlig vurderer en 1-sekunders-periode, så må vi sjekk både sekundet vi er på,
+                 * og sekundet vi kommer fra. På den måten vurderer man at hele sekundet er innenfor arbeidstiden.
+                 */
                 if (!IsWithinWorkday(scanDate) || !IsWithinWorkday(scanDate.AddSeconds(-scanIncremention)))
                     continue;
 
