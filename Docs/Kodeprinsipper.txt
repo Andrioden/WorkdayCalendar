@@ -1,8 +1,0 @@
-I dette prosjekter følger jeg disse generelle kodeprinsippene:
----------------------------------------------------
-
-- var vs eksplisitt spesifisere type:
-Jeg fortrekker å alltid, når mulig, eksplisitt spesifisere typen det refereres til, da jeg mener dette gjør koden mere lesbar og gjør at du kan dobbeltsjekke at det du har er det du forventer.
-Noen ganger er dette redundant ift variabelnavnet, dette annerkjenner jeg, men mener at det fortsatt overall er verdt det.
-
-- Definerer alltid eksplisitt at variabler er private, for å gjøre mere lesbart. Ikke alltid husker folk at default visibillity er private.
