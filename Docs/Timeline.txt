@@ -2,3 +2,4 @@
 2019.11.09 16:20 - Startet bryte ned oppgavens beskrivelse i PDF til individuelle tasker, som jeg la til et Kanban board prosjekt i github.
 2019.11.09 16:30 - Visual Studio, git repo oppsett, prosjektstruktur ol
 2019.11.09 16:55 - Starter å kode
+2019.11.09 22:00 - Sluttet å kode
