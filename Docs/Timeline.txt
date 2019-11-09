@@ -1,0 +1,4 @@
+2019.11.09 16:15 - Åpnet PDF og startet lese, samt opprettet git repo
+2019.11.09 16:20 - Startet bryte ned oppgavens beskrivelse i PDF til individuelle tasker, som jeg la til et Kanban board prosjekt i github.
+2019.11.09 16:30 - Visual Studio prosjektstruktur ol
+2019.11.09 16:45 - Starter å kode
