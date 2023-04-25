@@ -98,10 +98,26 @@ namespace WorkdayNet
 
         private bool IsWorkday(DateTime date)
         {
-            return date.DayOfWeek != DayOfWeek.Saturday
-                && date.DayOfWeek != DayOfWeek.Sunday
-                && !_holidays.Contains(date.Date)
-                && !_recurringHolidays.Contains(new DateTime(DateTime.Now.Year, date.Month, date.Day)));
+            // Check if the day is a weekend
+            if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+            {
+                return false;
+            }
+
+            // Check if the day is a holiday
+            if (_holidays.Contains(date.Date))
+            {
+                return false;
+            }
+
+            // Check if the day is a recurring holiday
+            if (_recurringHolidays.Contains(date.Date))
+            {
+                return false;
+            }
+
+            // Otherwise, it's a workday
+            return true;
         }
 
         private DateTime GetNextWorkday(DateTime date)
