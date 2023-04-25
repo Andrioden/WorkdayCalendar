@@ -1,12 +1,14 @@
 ﻿using System;
+using WC.Core;
+using WC.Human;
 
-namespace WorkdayCalendar.Console
+namespace WC.Console
 {
     class Program
     {
         private static IWorkdayCalendar calendar;
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             calendar = new WorkdayCalendar();
             calendar.SetWorkdayStartAndStop(8, 0, 16, 0);

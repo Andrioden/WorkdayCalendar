@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WorkdayCalendar
+namespace WC.Core
 {
     /*
      * Jeg har gjort 2 endringer på interfacet som jeg mente var fornuftig. Dette følte jeg at jeg kunne gjøre da

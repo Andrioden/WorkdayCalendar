@@ -23,8 +23,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WC.Core;
 
-namespace WorkdayCalendar
+namespace WC.Human
 {
 
     public class WorkdayCalendar : IWorkdayCalendar

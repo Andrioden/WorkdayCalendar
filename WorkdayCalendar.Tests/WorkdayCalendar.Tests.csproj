@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WorkdayCalendar\WorkdayCalendar.csproj" />
+    <ProjectReference Include="..\WorkdayCalendar.Human\WorkdayCalendar.Human.csproj" />
   </ItemGroup>
 
 </Project>

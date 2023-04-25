@@ -1,8 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Globalization;
+using WC.Human;
 
-namespace WorkdayCalendar.Tests
+namespace WC.Tests
 {
     /*
      * Jeg liker å navngi klasser etter følgende format: [TypeTest]_[Klasse]_[Metode]_[ExtraInfo]
