@@ -37,50 +37,62 @@ namespace WorkdayNet
 
         public DateTime GetWorkdayIncrement(DateTime startDate, decimal incrementInWorkdays)
         {
-            bool isNegative = incrementInWorkdays < 0;
-            incrementInWorkdays = Math.Abs(incrementInWorkdays);
-            DateTime result = startDate;
-            TimeSpan workdayDuration = _workdayEndTime - _workdayStartTime;
-            int wholeWorkdays = (int)Math.Truncate(incrementInWorkdays);
-            decimal remainingWorkdayFraction = incrementInWorkdays - wholeWorkdays;
+            TimeSpan workdayStart = _workdayStartTime.TimeOfDay;
+            TimeSpan workdayEnd = _workdayEndTime.TimeOfDay;
+            TimeSpan workdayDuration = workdayEnd - workdayStart;
 
-            for (int i = 0; i < wholeWorkdays; i++)
+            decimal remainingWorkdayFraction = (decimal)(startDate.TimeOfDay - workdayStart).Ticks / workdayDuration.Ticks;
+            remainingWorkdayFraction = Math.Min(Math.Max(remainingWorkdayFraction, 0m), 1m);
+
+            DateTime currentDate = startDate.Date;
+            while (incrementInWorkdays != 0)
             {
-                do
+                int direction = Math.Sign(incrementInWorkdays);
+                TimeSpan incrementTime = TimeSpan.FromTicks((long)(Math.Abs(incrementInWorkdays) * workdayDuration.Ticks));
+                while (incrementTime.Ticks > 0)
                 {
-                    result = result.AddDays(isNegative ? -1 : 1);
+                    if (direction > 0)
+                    {
+                        currentDate = currentDate.AddDays(1);
+                        if (IsWorkday(currentDate))
+                        {
+                            TimeSpan timeToAdd = workdayEnd - workdayStart;
+                            if (incrementTime >= timeToAdd)
+                            {
+                                incrementTime -= timeToAdd;
+                                remainingWorkdayFraction = 0;
+                            }
+                            else
+                            {
+                                remainingWorkdayFraction = (decimal)incrementTime.Ticks / workdayDuration.Ticks;
+                                incrementTime = TimeSpan.Zero;
+                            }
+                        }
+                    }
+                    else if (direction < 0)
+                    {
+                        if (IsWorkday(currentDate))
+                        {
+                            TimeSpan timeToSubtract = workdayEnd - workdayStart;
+                            if (incrementTime >= timeToSubtract)
+                            {
+                                incrementTime -= timeToSubtract;
+                                remainingWorkdayFraction = 1;
+                            }
+                            else
+                            {
+                                remainingWorkdayFraction = 1 - (decimal)incrementTime.Ticks / workdayDuration.Ticks;
+                                incrementTime = TimeSpan.Zero;
+                            }
+                        }
+                        currentDate = currentDate.AddDays(-1);
+                    }
                 }
-                while (!IsWorkday(result));
+                incrementInWorkdays -= direction;
             }
 
-            if (remainingWorkdayFraction > 0)
-            {
-                TimeSpan remainingWorkdayDuration = TimeSpan.FromTicks((long)(workdayDuration.Ticks * (double)remainingWorkdayFraction));
-                TimeSpan elapsedTime = TimeSpan.Zero;
-
-                do
-                {
-                    elapsedTime = result.TimeOfDay - _workdayStartTime;
-                    if (isNegative)
-                    {
-                        elapsedTime = workdayDuration - elapsedTime;
-                    }
-
-                    if (elapsedTime < remainingWorkdayDuration)
-                    {
-                        result = result.AddDays(isNegative ? -1 : 1);
-                        remainingWorkdayDuration -= elapsedTime;
-                        result = result.Date + _workdayEndTime;
-                    }
-                    else
-                    {
-                        result = result.Date + (isNegative ? _workdayEndTime - remainingWorkdayDuration : _workdayStartTime + remainingWorkdayDuration);
-                        break;
-                    }
-                }
-                while (true);
-            }
-
+            TimeSpan remainingTime = TimeSpan.FromTicks((long)(remainingWorkdayFraction * workdayDuration.Ticks));
+            DateTime result = currentDate.Date + remainingTime;
             return result;
         }
 
