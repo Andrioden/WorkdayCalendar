@@ -37,64 +37,49 @@ namespace WorkdayNet
 
         public DateTime GetWorkdayIncrement(DateTime startDate, decimal incrementInWorkdays)
         {
+            // Convert the increment to a TimeSpan
             TimeSpan increment = TimeSpan.FromDays((double)incrementInWorkdays);
 
-            // Adjust increment for workday start and stop times
-            if (incrementInWorkdays > 0)
+            // Set the start and end times for the workday
+            DateTime startTime = startDate.Date.Add(_workdayStartTime);
+            DateTime endTime = startDate.Date.Add(_workdayEndTime);
+
+            // Adjust the start and end times for weekends and holidays
+            while (!IsWorkday(startTime))
             {
-                if (startDate.TimeOfDay >= workdayStop)
-                {
-                    startDate = startDate.Date + workdayStart;
-                }
-                increment -= workdayStop - startDate.TimeOfDay;
+                startTime = startTime.AddDays(1);
             }
-            else if (incrementInWorkdays < 0)
+            while (!IsWorkday(endTime))
             {
-                if (startDate.TimeOfDay < workdayStart)
-                {
-                    startDate = startDate.Date + workdayStop.AddDays(-1);
-                }
-                increment -= startDate.TimeOfDay - workdayStart;
+                endTime = endTime.AddDays(1);
             }
 
-            // Calculate the new date, skipping weekends and holidays
-            while (increment.Ticks > 0)
+            // Calculate the total work time available in the workday
+            TimeSpan workdayTime = endTime - startTime;
+
+            // Subtract the workday start time from the start date to get the time remaining in the workday
+            TimeSpan timeRemainingInWorkday = endTime - startDate;
+
+            // Calculate the remaining work time in the workday
+            TimeSpan remainingWorkTime = TimeSpan.Zero;
+            if (timeRemainingInWorkday < workdayTime)
             {
-                startDate = startDate.AddDays(1);
-                if (startDate.DayOfWeek == DayOfWeek.Saturday || startDate.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    continue;
-                }
-                if (holidays.Contains(startDate) || recurringHolidays.Contains(new DateTime(2000, startDate.Month, startDate.Day)))
-                {
-                    continue;
-                }
-                increment -= TimeSpan.FromDays(1);
-            }
-            while (increment.Ticks < 0)
-            {
-                startDate = startDate.AddDays(-1);
-                if (startDate.DayOfWeek == DayOfWeek.Saturday || startDate.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    continue;
-                }
-                if (holidays.Contains(startDate) || recurringHolidays.Contains(new DateTime(2000, startDate.Month, startDate.Day)))
-                {
-                    continue;
-                }
-                increment += TimeSpan.FromDays(1);
+                remainingWorkTime = workdayTime - timeRemainingInWorkday;
             }
 
-            // Adjust date for workday start and stop times
-            if (incrementInWorkdays > 0 && startDate.TimeOfDay < workdayStart)
+            // Subtract the remaining work time from the increment time to get the elapsed work time
+            TimeSpan elapsedWorkTime = increment - remainingWorkTime;
+
+            // Add the elapsed work time to the end time to get the incremented date
+            DateTime incrementedDate = endTime.Add(elapsedWorkTime);
+
+            // Adjust the incremented date for weekends and holidays
+            while (!IsWorkday(incrementedDate))
             {
-                startDate = startDate.Date + workdayStart;
+                incrementedDate = incrementedDate.AddDays(1);
             }
-            else if (incrementInWorkdays < 0 && startDate.TimeOfDay >= workdayStop)
-            {
-                startDate = startDate.Date + workdayStop.AddDays(-1);
-            }
-            return startDate + increment;
+
+            return incrementedDate;
         }
 
         public string GetName()
