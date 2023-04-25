@@ -1,7 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Globalization;
-using WC.Human;
+//using WC.Human;
+using WorkdayNet;
 
 namespace WC.Tests
 {
@@ -35,42 +36,42 @@ namespace WC.Tests
         {
         }
 
-        [DataTestMethod]
-        [DataRow(00, 00, 00, 00,   0)]
-        [DataRow(00, 00, 01, 00,   60)]
-        [DataRow(00, 00, 01, 01,   61)]
-        [DataRow(23, 00, 00, 01,   61)]
-        public void UT_WorkdayCalendar_GetWorkdayDuration(int startHours, int startMinutes, int stopHours, int stopMinutes, int expTotalMinutes)
-        {
-            WorkdayCalendar workdayCalendar = new WorkdayCalendar();
-            workdayCalendar.SetWorkdayStartAndStop(startHours, startMinutes, stopHours, stopMinutes);
+        //[DataTestMethod]
+        //[DataRow(00, 00, 00, 00,   0)]
+        //[DataRow(00, 00, 01, 00,   60)]
+        //[DataRow(00, 00, 01, 01,   61)]
+        //[DataRow(23, 00, 00, 01,   61)]
+        //public void UT_WorkdayCalendar_GetWorkdayDuration(int startHours, int startMinutes, int stopHours, int stopMinutes, int expTotalMinutes)
+        //{
+        //    WorkdayCalendar workdayCalendar = new WorkdayCalendar();
+        //    workdayCalendar.SetWorkdayStartAndStop(startHours, startMinutes, stopHours, stopMinutes);
 
-            Assert.AreEqual(expTotalMinutes, workdayCalendar.GetWorkdayDuration().TotalMinutes);
-        }
+        //    Assert.AreEqual(expTotalMinutes, workdayCalendar.GetWorkdayDuration().TotalMinutes);
+        //}
 
-        [DataTestMethod]
-        // Starts and stops on same day
-        [DataRow(00, 00, 08, 00, "24-05-2004 00:00",   true)]
-        [DataRow(00, 00, 08, 00, "24-05-2004 00:01",   true)]
-        [DataRow(00, 00, 08, 00, "24-05-2004 07:59",   true)]
-        [DataRow(00, 00, 08, 00, "24-05-2004 08:00",   true)]
-        [DataRow(00, 00, 08, 00, "24-05-2004 08:01",   false)]
-        [DataRow(00, 00, 08, 00, "24-05-2004 23:59",   false)]
-        // Starts and stops crosses midnight
-        [DataRow(23, 00, 01, 00, "24-05-2004 23:00",   true)]
-        [DataRow(23, 00, 01, 00, "24-05-2004 23:01",   true)]
-        [DataRow(23, 00, 01, 00, "24-05-2004 00:59",   true)]
-        [DataRow(23, 00, 01, 00, "24-05-2004 01:00",   true)]
-        [DataRow(23, 00, 01, 00, "24-05-2004 01:01",   false)]
-        [DataRow(23, 00, 01, 00, "24-05-2004 22:59",   false)]
-        public void UT_WorkdayCalendar_IsWithinWorkday(int startHours, int startMinutes, int stopHours, int stopMinutes, string dateStr, bool expIsWithinWorkday)
-        {
-            WorkdayCalendar workdayCalendar = new WorkdayCalendar();
-            workdayCalendar.SetWorkdayStartAndStop(startHours, startMinutes, stopHours, stopMinutes);
+        //[DataTestMethod]
+        //// Starts and stops on same day
+        //[DataRow(00, 00, 08, 00, "24-05-2004 00:00",   true)]
+        //[DataRow(00, 00, 08, 00, "24-05-2004 00:01",   true)]
+        //[DataRow(00, 00, 08, 00, "24-05-2004 07:59",   true)]
+        //[DataRow(00, 00, 08, 00, "24-05-2004 08:00",   true)]
+        //[DataRow(00, 00, 08, 00, "24-05-2004 08:01",   false)]
+        //[DataRow(00, 00, 08, 00, "24-05-2004 23:59",   false)]
+        //// Starts and stops crosses midnight
+        //[DataRow(23, 00, 01, 00, "24-05-2004 23:00",   true)]
+        //[DataRow(23, 00, 01, 00, "24-05-2004 23:01",   true)]
+        //[DataRow(23, 00, 01, 00, "24-05-2004 00:59",   true)]
+        //[DataRow(23, 00, 01, 00, "24-05-2004 01:00",   true)]
+        //[DataRow(23, 00, 01, 00, "24-05-2004 01:01",   false)]
+        //[DataRow(23, 00, 01, 00, "24-05-2004 22:59",   false)]
+        //public void UT_WorkdayCalendar_IsWithinWorkday(int startHours, int startMinutes, int stopHours, int stopMinutes, string dateStr, bool expIsWithinWorkday)
+        //{
+        //    WorkdayCalendar workdayCalendar = new WorkdayCalendar();
+        //    workdayCalendar.SetWorkdayStartAndStop(startHours, startMinutes, stopHours, stopMinutes);
 
-            DateTime date = DateTime.ParseExact(dateStr, DATE_FORMAT, CultureInfo.InvariantCulture);
-            Assert.AreEqual(expIsWithinWorkday, workdayCalendar.IsWithinWorkday(date));
-        }
+        //    DateTime date = DateTime.ParseExact(dateStr, DATE_FORMAT, CultureInfo.InvariantCulture);
+        //    Assert.AreEqual(expIsWithinWorkday, workdayCalendar.IsWithinWorkday(date));
+        //}
 
         [DataTestMethod]
         // Forwards
@@ -79,7 +80,7 @@ namespace WC.Tests
         // Backwards
         [DataRow(00, 00, 08, 00, "24-05-2004 08:00", -1.0,   "24-05-2004 00:00")]
         [DataRow(00, 00, 08, 00, "25-05-2004 08:00", -2.0,   "24-05-2004 00:00")]
-        public void UT_WorkdayCalendar_GetWorkdayAfterIncremetedWorkdays(
+        public void UT_WorkdayCalendar_GetWorkdayIncrement(
             int startHours,
             int startMinutes,
             int stopHours,

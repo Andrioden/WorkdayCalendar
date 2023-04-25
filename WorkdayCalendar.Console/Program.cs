@@ -1,6 +1,8 @@
 ﻿using System;
 using WC.Core;
-using WC.Human;
+//using WC.Human;
+using WorkdayNet;
+
 
 namespace WC.Console
 {
@@ -10,6 +12,9 @@ namespace WC.Console
 
         private static void Main()
         {
+            System.Console.WriteLine("Starting");
+            System.Console.WriteLine("");
+
             calendar = new WorkdayCalendar();
             calendar.SetWorkdayStartAndStop(8, 0, 16, 0);
             calendar.SetRecurringHoliday(5, 17);

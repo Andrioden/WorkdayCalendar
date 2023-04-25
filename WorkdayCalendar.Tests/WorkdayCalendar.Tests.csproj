@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WorkdayCalendar.ChatGPT\WorkdayCalendar.ChatGPT.csproj" />
     <ProjectReference Include="..\WorkdayCalendar.Human\WorkdayCalendar.Human.csproj" />
   </ItemGroup>
 
