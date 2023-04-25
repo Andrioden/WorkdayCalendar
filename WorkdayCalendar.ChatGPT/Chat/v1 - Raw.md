@@ -65,8 +65,7 @@ Lykke til!
 ```
 
 # Output
-
-
+(ChatGPT Mar 23 Version)
 
 Her er en mulig implementasjon av WorkdayCalendar i C#:
 
