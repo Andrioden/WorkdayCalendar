@@ -92,7 +92,7 @@ namespace WC.Tests
             WorkdayCalendar workdayCalendar = new WorkdayCalendar();
             workdayCalendar.SetWorkdayStartAndStop(startHours, startMinutes, stopHours, stopMinutes);
 
-            DateTime workday = workdayCalendar.GetWorkdayAfterIncremetedWorkdays(
+            DateTime workday = workdayCalendar.GetWorkdayIncrement(
                 DateTime.ParseExact(startDateStr, DATE_FORMAT, CultureInfo.InvariantCulture),
                 (decimal)incrementWorkDays
             );

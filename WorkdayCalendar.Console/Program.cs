@@ -30,7 +30,7 @@ namespace WC.Console
         private static void RunTest(DateTime start, decimal increment)
         {
             string format = "dd-MM-yyyy HH:mm";
-            var incrementedDate = calendar.GetWorkdayAfterIncremetedWorkdays(start, increment);
+            var incrementedDate = calendar.GetWorkdayIncrement(start, increment);
 
             System.Console.WriteLine(
                 start.ToString(format) +

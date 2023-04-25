@@ -109,7 +109,7 @@ namespace WC.Human
         /// <summary>
         /// Get the next workday after the startDate incremeted by given amount of workdays have lapsed. Precision to seconds.
         /// </summary>
-        public DateTime GetWorkdayAfterIncremetedWorkdays(DateTime startDate, decimal incrementInWorkdays)
+        public DateTime GetWorkdayIncrement(DateTime startDate, decimal incrementInWorkdays)
         {
             /*
              * - Konverterer til decimal da det er en tryggere konversion
@@ -156,6 +156,11 @@ namespace WC.Human
             DateTime start = new DateTime(d.Year, d.Month, d.Day, StartHours, StartMinutes, 0).AddDays(startDelta);
             DateTime end = new DateTime(d.Year, d.Month, d.Day, StopHours, StopMinutes, 0).AddDays(stopDelta);
             return start <= d && d <= end;
+        }
+
+        public string GetName()
+        {
+            return "WorkdayCalendar.AndreTheHuman";
         }
     }
 }
