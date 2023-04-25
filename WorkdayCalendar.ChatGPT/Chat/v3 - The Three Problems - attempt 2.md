@@ -1,7 +1,19 @@
-﻿using System;
+# Input
+```
+There are still three problems:
+- _workdayStartTime dont exist, you need to remove the underscore
+- _workdayEndTime dont exist, you need to remove the underscore
+- IsWorkday dont exist
+```
+
+# Output
+
+I apologize for the mistake in my previous response. Here is the corrected implementation:
+
+```csharp
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using WC.Core;
 
 namespace WorkdayNet
 {
@@ -100,3 +112,6 @@ namespace WorkdayNet
         }
     }
 }
+```
+
+I hope this helps.
